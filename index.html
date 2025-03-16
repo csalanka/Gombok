@@ -2,7 +2,9 @@
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
-    <title>Professzionális Gomb Készítő</title>
+    <title>Professzionális Gomb Készítő és Ikontár</title>
+    <!-- Font Awesome betöltése az ikonokhoz -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             background-color: #1a1a1a;
@@ -19,12 +21,35 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            background-color: #3c3c3c;
+            border: none;
+            border-radius: 5px;
+            color: #e0e0e0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .tab-button.active {
+            background-color: #4CAF50;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
         .control-group {
             margin-bottom: 15px;
         }
         label {
             display: inline-block;
-            width: 140px; /* Kicsit szélesebb, hogy elférjenek az új címkék */
+            width: 140px;
             font-weight: bold;
         }
         select, input[type="color"], input[type="number"] {
@@ -49,7 +74,7 @@
         }
         #inactiveButton {
             cursor: not-allowed;
-            opacity: 0.7; /* Halványabb megjelenés */
+            opacity: 0.7;
         }
         #settingsOutput {
             margin-top: 20px;
@@ -58,128 +83,199 @@
             border-radius: 5px;
             white-space: pre-wrap;
         }
+        .icon-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .icon-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .icon {
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+        .icon.active {
+            color: #4CAF50; /* Aktív szín */
+        }
+        .icon.inactive {
+            color: #808080; /* Passzív szín */
+            opacity: 0.7;
+        }
+        .icon-label {
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Professzionális Gomb Készítő</h2>
-        
-        <div class="control-group">
-            <label for="shape">Forma:</label>
-            <select id="shape">
-                <option value="rectangle">Téglalap</option>
-                <option value="rounded">Lekerekített</option>
-                <option value="circle">Kör</option>
-            </select>
+        <h2>Professzionális Gomb Készítő és Ikontár</h2>
+
+        <!-- Lapváltó gombok -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab('buttonCreator')">Gomb Készítő</button>
+            <button class="tab-button" onclick="openTab('iconLibrary')">Ikontár</button>
         </div>
 
-        <div class="control-group">
-            <label for="shadow">Árnyék:</label>
-            <input type="checkbox" id="shadow">
+        <!-- Gomb Készítő lap -->
+        <div id="buttonCreator" class="tab-content active">
+            <div class="control-group">
+                <label for="shape">Forma:</label>
+                <select id="shape">
+                    <option value="rectangle">Téglalap</option>
+                    <option value="rounded">Lekerekített</option>
+                    <option value="circle">Kör</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="shadow">Árnyék:</label>
+                <input type="checkbox" id="shadow">
+            </div>
+
+            <div class="control-group">
+                <label for="bgColor">Háttérszín:</label>
+                <select id="bgColor">
+                    <option value="#4CAF50">Zöld</option>
+                    <option value="#2196F3">Kék</option>
+                    <option value="#F44336">Piros</option>
+                    <option value="#FFEB3B">Sárga</option>
+                    <option value="#9C27B0">Lila</option>
+                    <option value="#ffffff">Fehér</option>
+                    <option value="#000000">Fekete</option>
+                    <option value="#FF9800">Narancssárga</option>
+                    <option value="#8BC34A">Világoszöld</option>
+                    <option value="#E91E63">Rózsaszín</option>
+                    <option value="#CDDC39">Lime</option>
+                    <option value="#3F51B5">Indigókék</option>
+                    <option value="#795548">Barna</option>
+                    <option value="#607D8B">Sötétszürke</option>
+                </select>
+                <input type="color" id="customBgColor" value="#4CAF50" style="margin-left: 10px;">
+            </div>
+
+            <div class="control-group">
+                <label for="textColor">Szövegszín:</label>
+                <select id="textColor">
+                    <option value="#ffffff">Fehér</option>
+                    <option value="#000000">Fekete</option>
+                    <option value="#FF5722">Narancssárga</option>
+                    <option value="#8BC34A">Világoszöld</option>
+                    <option value="#E91E63">Rózsaszín</option>
+                    <option value="#212121">Sötétszürke</option>
+                    <option value="#D81B60">Rózsaszín (sötét)</option>
+                    <option value="#00BCD4">Cián</option>
+                    <option value="#FFCA28">Sárga (világos)</option>
+                </select>
+                <input type="color" id="customTextColor" value="#ffffff" style="margin-left: 10px;">
+            </div>
+
+            <div class="control-group">
+                <label for="font">Betűtípus:</label>
+                <select id="font">
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Impact">Impact</option>
+                    <option value="Roboto">Roboto</option>
+                    <option value="Open Sans">Open Sans</option>
+                    <option value="Lato">Lato</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="fontWeight">Betűtípus súly:</label>
+                <select id="fontWeight">
+                    <option value="normal">Normál</option>
+                    <option value="bold">Félkövér</option>
+                    <option value="bolder">Extra félkövér</option>
+                    <option value="lighter">Könnyebb</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="fontSize">Betűméret (px):</label>
+                <input type="number" id="fontSize" value="16" min="10" max="50">
+            </div>
+
+            <div class="control-group">
+                <label for="borderStyle">Szegély stílusa:</label>
+                <select id="borderStyle">
+                    <option value="solid">Folytonos</option>
+                    <option value="dashed">Szaggatott</option>
+                    <option value="dotted">Pontozott</option>
+                    <option value="double">Dupla</option>
+                    <option value="none">Nincs</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="borderWidth">Szegély vastagság (px):</label>
+                <input type="number" id="borderWidth" value="2" min="0" max="10">
+            </div>
+
+            <div class="control-group">
+                <label for="width">Szélesség (px):</label>
+                <input type="number" id="width" value="150" min="50" max="500">
+            </div>
+
+            <div class="control-group">
+                <label for="height">Magasság (px):</label>
+                <input type="number" id="height" value="50" min="30" max="200">
+            </div>
+
+            <div class="button-group">
+                <button id="previewButton">Aktív Gomb</button>
+                <button id="inactiveButton" disabled>Nem Aktív Gomb</button>
+            </div>
+            <div id="settingsOutput">Beállítások és méretek itt jelennek meg...</div>
         </div>
 
-        <div class="control-group">
-            <label for="bgColor">Háttérszín:</label>
-            <select id="bgColor">
-                <option value="#4CAF50">Zöld</option>
-                <option value="#2196F3">Kék</option>
-                <option value="#F44336">Piros</option>
-                <option value="#FFEB3B">Sárga</option>
-                <option value="#9C27B0">Lila</option>
-                <option value="#ffffff">Fehér</option>
-                <option value="#000000">Fekete</option>
-                <option value="#FF9800">Narancssárga</option>
-                <option value="#8BC34A">Világoszöld</option>
-                <option value="#E91E63">Rózsaszín</option>
-                <option value="#CDDC39">Lime</option>
-                <option value="#3F51B5">Indigókék</option>
-                <option value="#795548">Barna</option>
-                <option value="#607D8B">Sötétszürke</option>
-            </select>
-            <input type="color" id="customBgColor" value="#4CAF50" style="margin-left: 10px;">
+        <!-- Ikontár lap -->
+        <div id="iconLibrary" class="tab-content">
+            <h3>Ikontár</h3>
+            <div class="icon-list">
+                <div class="icon-item">
+                    <i class="fas fa-trash icon active"></i>
+                    <i class="fas fa-trash icon inactive"></i>
+                    <span class="icon-label">Kuka</span>
+                </div>
+                <div class="icon-item">
+                    <i class="fas fa-info-circle icon active"></i>
+                    <i class="fas fa-info-circle icon inactive"></i>
+                    <span class="icon-label">Infó</span>
+                </div>
+                <div class="icon-item">
+                    <i class="fas fa-save icon active"></i>
+                    <i class="fas fa-save icon inactive"></i>
+                    <span class="icon-label">Mentés</span>
+                </div>
+                <div class="icon-item">
+                    <i class="fas fa-archive icon active"></i>
+                    <i class="fas fa-archive icon inactive"></i>
+                    <span class="icon-label">Archivál</span>
+                </div>
+                <div class="icon-item">
+                    <i class="fas fa-print icon active"></i>
+                    <i class="fas fa-print icon inactive"></i>
+                    <span class="icon-label">Nyomtatás</span>
+                </div>
+                <div class="icon-item">
+                    <i class="fas fa-upload icon active"></i>
+                    <i class="fas fa-upload icon inactive"></i>
+                    <span class="icon-label">Feltöltés</span>
+                </div>
+            </div>
         </div>
-
-        <div class="control-group">
-            <label for="textColor">Szövegszín:</label>
-            <select id="textColor">
-                <option value="#ffffff">Fehér</option>
-                <option value="#000000">Fekete</option>
-                <option value="#FF5722">Narancssárga</option>
-                <option value="#8BC34A">Világoszöld</option>
-                <option value="#E91E63">Rózsaszín</option>
-                <option value="#212121">Sötétszürke</option>
-                <option value="#D81B60">Rózsaszín (sötét)</option>
-                <option value="#00BCD4">Cián</option>
-                <option value="#FFCA28">Sárga (világos)</option>
-            </select>
-            <input type="color" id="customTextColor" value="#ffffff" style="margin-left: 10px;">
-        </div>
-
-        <div class="control-group">
-            <label for="font">Betűtípus:</label>
-            <select id="font">
-                <option value="Arial">Arial</option>
-                <option value="Times New Roman">Times New Roman</option>
-                <option value="Verdana">Verdana</option>
-                <option value="Courier New">Courier New</option>
-                <option value="Georgia">Georgia</option>
-                <option value="Helvetica">Helvetica</option>
-                <option value="Impact">Impact</option>
-                <option value="Roboto">Roboto</option>
-                <option value="Open Sans">Open Sans</option>
-                <option value="Lato">Lato</option>
-            </select>
-        </div>
-
-        <div class="control-group">
-            <label for="fontWeight">Betűtípus súly:</label>
-            <select id="fontWeight">
-                <option value="normal">Normál</option>
-                <option value="bold">Félkövér</option>
-                <option value="bolder">Extra félkövér</option>
-                <option value="lighter">Könnyebb</option>
-            </select>
-        </div>
-
-        <div class="control-group">
-            <label for="fontSize">Betűméret (px):</label>
-            <input type="number" id="fontSize" value="16" min="10" max="50">
-        </div>
-
-        <div class="control-group">
-            <label for="borderStyle">Szegély stílusa:</label>
-            <select id="borderStyle">
-                <option value="solid">Folytonos</option>
-                <option value="dashed">Szaggatott</option>
-                <option value="dotted">Pontozott</option>
-                <option value="double">Dupla</option>
-                <option value="none">Nincs</option>
-            </select>
-        </div>
-
-        <div class="control-group">
-            <label for="borderWidth">Szegély vastagság (px):</label>
-            <input type="number" id="borderWidth" value="2" min="0" max="10">
-        </div>
-
-        <div class="control-group">
-            <label for="width">Szélesség (px):</label>
-            <input type="number" id="width" value="150" min="50" max="500">
-        </div>
-
-        <div class="control-group">
-            <label for="height">Magasság (px):</label>
-            <input type="number" id="height" value="50" min="30" max="200">
-        </div>
-
-        <div class="button-group">
-            <button id="previewButton">Aktív Gomb</button>
-            <button id="inactiveButton" disabled>Nem Aktív Gomb</button>
-        </div>
-        <div id="settingsOutput">Beállítások és méretek itt jelennek meg...</div>
     </div>
 
     <script>
+        // Gomb Készítő logika
         function updateButton() {
             const shape = document.getElementById("shape").value;
             const shadow = document.getElementById("shadow").checked;
@@ -200,7 +296,6 @@
             if (shape === "rounded") borderRadius = "15px";
             else if (shape === "circle") borderRadius = "50%";
 
-            // Aktív gomb stílusa
             activeButton.style.backgroundColor = bgColor;
             activeButton.style.color = textColor;
             activeButton.style.fontFamily = font;
@@ -212,10 +307,9 @@
             activeButton.style.boxShadow = shadow ? "5px 5px 15px rgba(0, 0, 0, 0.5)" : "none";
             activeButton.style.border = borderWidth + " " + borderStyle + " " + (borderStyle === "none" ? "transparent" : "#e0e0e0");
 
-            // Nem aktív gomb stílusa (örökli a beállításokat, de halványabb)
-            inactiveButton.style.backgroundColor = bgColor; // Ugyanaz a háttérszín
+            inactiveButton.style.backgroundColor = bgColor;
             inactiveButton.style.color = textColor;
-            inactiveButton.style.opacity = "0.7"; // Halványabb
+            inactiveButton.style.opacity = "0.7";
             inactiveButton.style.fontFamily = font;
             inactiveButton.style.fontWeight = fontWeight;
             inactiveButton.style.fontSize = fontSize;
@@ -225,7 +319,6 @@
             inactiveButton.style.boxShadow = shadow ? "5px 5px 15px rgba(0, 0, 0, 0.3)" : "none";
             inactiveButton.style.border = borderWidth + " " + borderStyle + " " + (borderStyle === "none" ? "transparent" : "#a0a0a0");
 
-            // Színválasztók szinkronizálása a dropdownokkal
             document.getElementById("bgColor").addEventListener("change", () => {
                 document.getElementById("customBgColor").value = document.getElementById("bgColor").value;
                 updateButton();
@@ -259,6 +352,22 @@
 
         // Kezdeti frissítés
         updateButton();
+
+        // Lapváltó logika
+        function openTab(tabName) {
+            const tabs = document.getElementsByClassName("tab-content");
+            const tabButtons = document.getElementsByClassName("tab-button");
+
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+
+            document.getElementById(tabName).classList.add("active");
+            event.currentTarget.classList.add("active");
+        }
     </script>
 </body>
 </html>
