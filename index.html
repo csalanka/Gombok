@@ -141,9 +141,18 @@
             document.getElementById("settingsOutput").textContent = output;
         }
 
-        // Kezdeti frissítés és eseményhallgató
+        // Automatikus frissítés minden változáskor
+        document.getElementById("shape").addEventListener("change", updateButton);
+        document.getElementById("shadow").addEventListener("change", updateButton);
+        document.getElementById("bgColor").addEventListener("input", updateButton);
+        document.getElementById("textColor").addEventListener("input", updateButton);
+        document.getElementById("font").addEventListener("change", updateButton);
+        document.getElementById("width").addEventListener("input", updateButton);
+        document.getElementById("height").addEventListener("input", updateButton);
         document.getElementById("previewButton").addEventListener("click", updateButton);
-        updateButton(); // Első betöltéskor is frissít
-    </style>
-    </head>
-    </html>
+
+        // Kezdeti frissítés
+        updateButton();
+    </script>
+</body>
+</html>
