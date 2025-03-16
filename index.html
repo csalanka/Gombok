@@ -12,7 +12,7 @@
             padding: 0;
         }
         .container {
-            max-width: 600px;
+            max-width: 800px; /* Szélesebb, hogy a két gomb elférjen */
             margin: 0 auto;
             padding: 20px;
             background-color: #2c2c2c;
@@ -35,14 +35,24 @@
             background-color: #3c3c3c;
             color: #e0e0e0;
         }
-        #previewButton {
+        .button-group {
+            display: flex;
+            gap: 20px; /* Tér a gombok között */
+            margin-top: 20px;
+        }
+        #previewButton, #inactiveButton {
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
             transition: all 0.3s ease;
-            margin-top: 20px;
+        }
+        #inactiveButton {
+            background-color: #808080; /* Szürke, nem aktív állapot */
+            color: #cccccc; /* Halvány szöveg */
+            cursor: not-allowed; /* Nem kattintható jelzés */
+            opacity: 0.7; /* Átlátszóság */
         }
         #settingsOutput {
             margin-top: 20px;
@@ -81,6 +91,13 @@
                 <option value="#9C27B0">Lila</option>
                 <option value="#ffffff">Fehér</option>
                 <option value="#000000">Fekete</option>
+                <option value="#FF9800">Narancssárga</option>
+                <option value="#8BC34A">Világoszöld</option>
+                <option value="#E91E63">Rózsaszín</option>
+                <option value="#CDDC39">Lime</option>
+                <option value="#3F51B5">Indigókék</option>
+                <option value="#795548">Barna</option>
+                <option value="#607D8B">Sötétszürke</option>
             </select>
             <input type="color" id="customBgColor" value="#4CAF50" style="margin-left: 10px;">
         </div>
@@ -93,6 +110,10 @@
                 <option value="#FF5722">Narancssárga</option>
                 <option value="#8BC34A">Világoszöld</option>
                 <option value="#E91E63">Rózsaszín</option>
+                <option value="#212121">Sötétszürke</option>
+                <option value="#D81B60">Rózsaszín (sötét)</option>
+                <option value="#00BCD4">Cián</option>
+                <option value="#FFCA28">Sárga (világos)</option>
             </select>
             <input type="color" id="customTextColor" value="#ffffff" style="margin-left: 10px;">
         </div>
@@ -107,6 +128,9 @@
                 <option value="Georgia">Georgia</option>
                 <option value="Helvetica">Helvetica</option>
                 <option value="Impact">Impact</option>
+                <option value="Roboto">Roboto</option>
+                <option value="Open Sans">Open Sans</option>
+                <option value="Lato">Lato</option>
             </select>
         </div>
 
@@ -136,7 +160,10 @@
             <input type="number" id="height" value="50" min="30" max="200">
         </div>
 
-        <button id="previewButton">Előnézet frissítése</button>
+        <div class="button-group">
+            <button id="previewButton">Aktív Gomb</button>
+            <button id="inactiveButton" disabled>Nem Aktív Gomb</button>
+        </div>
         <div id="settingsOutput">Beállítások és méretek itt jelennek meg...</div>
     </div>
 
@@ -144,28 +171,41 @@
         function updateButton() {
             const shape = document.getElementById("shape").value;
             const shadow = document.getElementById("shadow").checked;
-            const bgColor = document.getElementById("customBgColor").value; // Egyéni szín használata
-            const textColor = document.getElementById("customTextColor").value; // Egyéni szín használata
+            const bgColor = document.getElementById("customBgColor").value;
+            const textColor = document.getElementById("customTextColor").value;
             const font = document.getElementById("font").value;
             const borderStyle = document.getElementById("borderStyle").value;
             const borderWidth = document.getElementById("borderWidth").value + "px";
             const width = document.getElementById("width").value + "px";
             const height = document.getElementById("height").value + "px";
 
-            const button = document.getElementById("previewButton");
+            const activeButton = document.getElementById("previewButton");
+            const inactiveButton = document.getElementById("inactiveButton");
             let borderRadius = "5px";
 
             if (shape === "rounded") borderRadius = "15px";
             else if (shape === "circle") borderRadius = "50%";
 
-            button.style.backgroundColor = bgColor;
-            button.style.color = textColor;
-            button.style.fontFamily = font;
-            button.style.width = width;
-            button.style.height = height;
-            button.style.borderRadius = borderRadius;
-            button.style.boxShadow = shadow ? "5px 5px 15px rgba(0, 0, 0, 0.5)" : "none";
-            button.style.border = borderWidth + " " + borderStyle + " " + (borderStyle === "none" ? "transparent" : "#e0e0e0");
+            // Aktív gomb stílusa
+            activeButton.style.backgroundColor = bgColor;
+            activeButton.style.color = textColor;
+            activeButton.style.fontFamily = font;
+            activeButton.style.width = width;
+            activeButton.style.height = height;
+            activeButton.style.borderRadius = borderRadius;
+            activeButton.style.boxShadow = shadow ? "5px 5px 15px rgba(0, 0, 0, 0.5)" : "none";
+            activeButton.style.border = borderWidth + " " + borderStyle + " " + (borderStyle === "none" ? "transparent" : "#e0e0e0");
+
+            // Nem aktív gomb stílusa (örökli az aktív beállításokat, de szürke és letiltva)
+            inactiveButton.style.backgroundColor = "#808080"; // Szürke alapértelmezett
+            inactiveButton.style.color = "#cccccc"; // Halvány szöveg
+            inactiveButton.style.fontFamily = font;
+            inactiveButton.style.width = width;
+            inactiveButton.style.height = height;
+            inactiveButton.style.borderRadius = borderRadius;
+            inactiveButton.style.boxShadow = shadow ? "5px 5px 15px rgba(0, 0, 0, 0.3)" : "none"; // Gyengébb árnyék
+            inactiveButton.style.border = borderWidth + " " + borderStyle + " " + (borderStyle === "none" ? "transparent" : "#a0a0a0");
+            inactiveButton.disabled = true; // Mindig letiltva
 
             // Színválasztók szinkronizálása a dropdownokkal
             document.getElementById("bgColor").addEventListener("change", () => {
@@ -196,7 +236,6 @@
             element.addEventListener("change", updateButton);
             element.addEventListener("input", updateButton);
         });
-        document.getElementById("previewButton").addEventListener("click", updateButton);
 
         // Kezdeti frissítés
         updateButton();
