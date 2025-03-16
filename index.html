@@ -73,12 +73,28 @@
 
         <div class="control-group">
             <label for="bgColor">Háttérszín:</label>
-            <input type="color" id="bgColor" value="#4CAF50">
+            <select id="bgColor">
+                <option value="#4CAF50">Zöld</option>
+                <option value="#2196F3">Kék</option>
+                <option value="#F44336">Piros</option>
+                <option value="#FFEB3B">Sárga</option>
+                <option value="#9C27B0">Lila</option>
+                <option value="#ffffff">Fehér</option>
+                <option value="#000000">Fekete</option>
+            </select>
+            <input type="color" id="customBgColor" value="#4CAF50" style="margin-left: 10px;">
         </div>
 
         <div class="control-group">
             <label for="textColor">Szövegszín:</label>
-            <input type="color" id="textColor" value="#ffffff">
+            <select id="textColor">
+                <option value="#ffffff">Fehér</option>
+                <option value="#000000">Fekete</option>
+                <option value="#FF5722">Narancssárga</option>
+                <option value="#8BC34A">Világoszöld</option>
+                <option value="#E91E63">Rózsaszín</option>
+            </select>
+            <input type="color" id="customTextColor" value="#ffffff" style="margin-left: 10px;">
         </div>
 
         <div class="control-group">
@@ -88,7 +104,26 @@
                 <option value="Times New Roman">Times New Roman</option>
                 <option value="Verdana">Verdana</option>
                 <option value="Courier New">Courier New</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Helvetica">Helvetica</option>
+                <option value="Impact">Impact</option>
             </select>
+        </div>
+
+        <div class="control-group">
+            <label for="borderStyle">Szegély stílusa:</label>
+            <select id="borderStyle">
+                <option value="solid">Folytonos</option>
+                <option value="dashed">Szaggatott</option>
+                <option value="dotted">Pontozott</option>
+                <option value="double">Dupla</option>
+                <option value="none">Nincs</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="borderWidth">Szegély vastagság (px):</label>
+            <input type="number" id="borderWidth" value="2" min="0" max="10">
         </div>
 
         <div class="control-group">
@@ -109,9 +144,11 @@
         function updateButton() {
             const shape = document.getElementById("shape").value;
             const shadow = document.getElementById("shadow").checked;
-            const bgColor = document.getElementById("bgColor").value;
-            const textColor = document.getElementById("textColor").value;
+            const bgColor = document.getElementById("customBgColor").value; // Egyéni szín használata
+            const textColor = document.getElementById("customTextColor").value; // Egyéni szín használata
             const font = document.getElementById("font").value;
+            const borderStyle = document.getElementById("borderStyle").value;
+            const borderWidth = document.getElementById("borderWidth").value + "px";
             const width = document.getElementById("width").value + "px";
             const height = document.getElementById("height").value + "px";
 
@@ -128,6 +165,17 @@
             button.style.height = height;
             button.style.borderRadius = borderRadius;
             button.style.boxShadow = shadow ? "5px 5px 15px rgba(0, 0, 0, 0.5)" : "none";
+            button.style.border = borderWidth + " " + borderStyle + " " + (borderStyle === "none" ? "transparent" : "#e0e0e0");
+
+            // Színválasztók szinkronizálása a dropdownokkal
+            document.getElementById("bgColor").addEventListener("change", () => {
+                document.getElementById("customBgColor").value = document.getElementById("bgColor").value;
+                updateButton();
+            });
+            document.getElementById("textColor").addEventListener("change", () => {
+                document.getElementById("customTextColor").value = document.getElementById("textColor").value;
+                updateButton();
+            });
 
             const output = `Beállítások:
 - Forma: ${shape}
@@ -135,6 +183,8 @@
 - Háttérszín: ${bgColor}
 - Szövegszín: ${textColor}
 - Betűtípus: ${font}
+- Szegély stílusa: ${borderStyle}
+- Szegély vastagság: ${borderWidth}
 - Szélesség: ${width}
 - Magasság: ${height}`;
 
@@ -142,13 +192,10 @@
         }
 
         // Automatikus frissítés minden változáskor
-        document.getElementById("shape").addEventListener("change", updateButton);
-        document.getElementById("shadow").addEventListener("change", updateButton);
-        document.getElementById("bgColor").addEventListener("input", updateButton);
-        document.getElementById("textColor").addEventListener("input", updateButton);
-        document.getElementById("font").addEventListener("change", updateButton);
-        document.getElementById("width").addEventListener("input", updateButton);
-        document.getElementById("height").addEventListener("input", updateButton);
+        document.querySelectorAll("select, input").forEach(element => {
+            element.addEventListener("change", updateButton);
+            element.addEventListener("input", updateButton);
+        });
         document.getElementById("previewButton").addEventListener("click", updateButton);
 
         // Kezdeti frissítés
