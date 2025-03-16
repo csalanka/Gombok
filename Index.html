@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Professzionális Gomb Készítő</title>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #2c2c2c;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .control-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: inline-block;
+            width: 120px;
+            font-weight: bold;
+        }
+        select, input[type="color"], input[type="number"] {
+            padding: 5px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3c3c3c;
+            color: #e0e0e0;
+        }
+        #previewButton {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        #settingsOutput {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #3c3c3c;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Professzionális Gomb Készítő</h2>
+        
+        <div class="control-group">
+            <label for="shape">Forma:</label>
+            <select id="shape">
+                <option value="rectangle">Téglalap</option>
+                <option value="rounded">Lekerekített</option>
+                <option value="circle">Kör</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="shadow">Árnyék:</label>
+            <input type="checkbox" id="shadow">
+        </div>
+
+        <div class="control-group">
+            <label for="bgColor">Háttérszín:</label>
+            <input type="color" id="bgColor" value="#4CAF50">
+        </div>
+
+        <div class="control-group">
+            <label for="textColor">Szövegszín:</label>
+            <input type="color" id="textColor" value="#ffffff">
+        </div>
+
+        <div class="control-group">
+            <label for="font">Betűtípus:</label>
+            <select id="font">
+                <option value="Arial">Arial</option>
+                <option value="Times New Roman">Times New Roman</option>
+                <option value="Verdana">Verdana</option>
+                <option value="Courier New">Courier New</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="width">Szélesség (px):</label>
+            <input type="number" id="width" value="150" min="50" max="500">
+        </div>
+
+        <div class="control-group">
+            <label for="height">Magasság (px):</label>
+            <input type="number" id="height" value="50" min="30" max="200">
+        </div>
+
+        <button id="previewButton">Előnézet frissítése</button>
+        <div id="settingsOutput">Beállítások és méretek itt jelennek meg...</div>
+    </div>
+
+    <script>
+        function updateButton() {
+            const shape = document.getElementById("shape").value;
+            const shadow = document.getElementById("shadow").checked;
+            const bgColor = document.getElementById("bgColor").value;
+            const textColor = document.getElementById("textColor").value;
+            const font = document.getElementById("font").value;
+            const width = document.getElementById("width").value + "px";
+            const height = document.getElementById("height").value + "px";
+
+            const button = document.getElementById("previewButton");
+            let borderRadius = "5px";
+
+            if (shape === "rounded") borderRadius = "15px";
+            else if (shape === "circle") borderRadius = "50%";
+
+            button.style.backgroundColor = bgColor;
+            button.style.color = textColor;
+            button.style.fontFamily = font;
+            button.style.width = width;
+            button.style.height = height;
+            button.style.borderRadius = borderRadius;
+            button.style.boxShadow = shadow ? "5px 5px 15px rgba(0, 0, 0, 0.5)" : "none";
+
+            const output = `Beállítások:
+- Forma: ${shape}
+- Árnyék: ${shadow ? "Bekapcsolva" : "Kikapcsolva"}
+- Háttérszín: ${bgColor}
+- Szövegszín: ${textColor}
+- Betűtípus: ${font}
+- Szélesség: ${width}
+- Magasság: ${height}`;
+
+            document.getElementById("settingsOutput").textContent = output;
+        }
+
+        // Kezdeti frissítés és eseményhallgató
+        document.getElementById("previewButton").addEventListener("click", updateButton);
+        updateButton(); // Első betöltéskor is frissít
+    </style>
+    </head>
+    </html>
